@@ -21,41 +21,40 @@ class Document(Base):
     __tablename__ = "documents"
 
     id = Column(Integer, primary_key=True, index=True)
-    filename = Column(String)
-    file_path = Column(String)
-    processed_path = Column(String, nullable=True)
-    mime_type = Column(String)
+    filename = Column(String, nullable=False)
+    mime_type = Column(String, nullable=False)
+    file_path = Column(String, nullable=False)
     size = Column(Integer)
     num_chapters = Column(Integer, default=0)
     total_paragraphs = Column(Integer, default=0)
-    document_metadata = Column(JSON, default={})
+    document_metadata = Column(JSON, nullable=True)
+    is_confidential = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    is_confidential = Column(Boolean, default=False)
-    translator_profile_id = Column(Integer, ForeignKey("translator_profiles.id"), nullable=True)
 
     # Relacionamentos
-    translator_profile = relationship("TranslatorProfile", back_populates="documents")
     chapters = relationship("Chapter", back_populates="document", cascade="all, delete-orphan")
-    translations = relationship("Translation", back_populates="document")
+    translations = relationship("Translation", back_populates="document", cascade="all, delete-orphan")
+    translator_profile = relationship("TranslatorProfile", back_populates="documents")
+    translator_profile_id = Column(Integer, ForeignKey("translator_profiles.id"), nullable=True)
 
 class Chapter(Base):
     __tablename__ = "chapters"
 
     id = Column(Integer, primary_key=True, index=True)
-    document_id = Column(Integer, ForeignKey("documents.id"))
-    title = Column(String)
-    order = Column(Integer)
-    content = Column(JSON)  # Armazena parágrafos e metadados
-    translated_content = Column(JSON, nullable=True)  # Versão traduzida
+    document_id = Column(Integer, ForeignKey("documents.id"), nullable=False)
+    title = Column(String, nullable=False)
+    order = Column(Integer, nullable=False)
+    content = Column(JSON)  # Armazena parágrafos
+    translated_content = Column(JSON, nullable=True)  # Armazena traduções
     translation_status = Column(String, default="pending")  # pending, in_progress, completed
-    progress_percentage = Column(Float, default=0)
+    progress_percentage = Column(Float, default=0.0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relacionamentos
     document = relationship("Document", back_populates="chapters")
-    translations = relationship("Translation", back_populates="chapter")
+    translations = relationship("Translation", back_populates="chapter", cascade="all, delete-orphan")
 
 class Translation(Base):
     __tablename__ = "translations"
@@ -63,22 +62,22 @@ class Translation(Base):
     id = Column(Integer, primary_key=True, index=True)
     original_text = Column(Text, nullable=False)
     translated_text = Column(Text, nullable=False)
-    source_language = Column(String(10), nullable=False)
-    target_language = Column(String(10), nullable=False)
-    formality_level = Column(String(20), nullable=True)  # formal, informal, neutral
-    tone = Column(String(50), nullable=True)  # academic, literary, technical, casual
-    domain_specific = Column(String(50), nullable=True)  # legal, medical, literary, etc.
+    source_language = Column(String, nullable=False)
+    target_language = Column(String, nullable=False)
+    formality_level = Column(String)
+    tone = Column(String)
+    domain_specific = Column(Boolean, default=False)
     preserve_formatting = Column(Boolean, default=True)
-    locale_specific = Column(String(20), nullable=True)  # pt-BR, pt-PT, etc.
-    quality_score = Column(Float, nullable=True)  # 0-1 score
+    locale_specific = Column(Boolean, default=False)
+    quality_score = Column(Float)
     revision_needed = Column(Boolean, default=False)
-    has_been_edited = Column(Integer, default=0)
-    edit_distance = Column(Integer, nullable=True)  # Distância entre original e editado
-    translator_feedback = Column(Text, nullable=True)
-    improvement_suggestions = Column(JSON, nullable=True)
-    learning_flags = Column(JSON, nullable=True)  # Marcadores para aprendizado
-    project_id = Column(String(50), nullable=True)
-    security_level = Column(String(20), default="standard")
+    has_been_edited = Column(Boolean, default=False)
+    edit_distance = Column(Integer)
+    translator_feedback = Column(Text)
+    improvement_suggestions = Column(JSON)
+    learning_flags = Column(JSON)
+    project_id = Column(Integer)
+    security_level = Column(String, default="normal")
     is_confidential = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
@@ -100,11 +99,11 @@ class TranslationRevision(Base):
     id = Column(Integer, primary_key=True, index=True)
     translation_id = Column(Integer, ForeignKey("translations.id"), nullable=False)
     revised_text = Column(Text, nullable=False)
-    revision_type = Column(String(50), nullable=True)  # style, grammar, context, etc.
-    revision_comments = Column(Text, nullable=True)
-    time_spent = Column(Integer, nullable=True)  # tempo em segundos
-    quality_improvement = Column(Float, nullable=True)  # 0-1 score
-    accepted_changes = Column(Boolean, nullable=True)
+    revision_type = Column(String)  # manual, automatic, peer
+    revision_comments = Column(Text)
+    time_spent = Column(Integer)  # segundos
+    quality_improvement = Column(Float)
+    accepted_changes = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relacionamentos
