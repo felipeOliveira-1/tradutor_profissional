@@ -8,3 +8,7 @@ python-multipart==0.0.6
 sqlalchemy==2.0.23
 psycopg2-binary==2.9.9
 alembic==1.13.1
+python-docx==0.8.11
+PyPDF2==3.0.1
+python-magic==0.4.27
+aiofiles==23.2.1
