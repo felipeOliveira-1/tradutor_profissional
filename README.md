@@ -2,14 +2,20 @@
 
 Uma aplicação de tradução profissional que utiliza modelos de linguagem avançados para auxiliar tradutores, oferecendo traduções precisas e personalizáveis.
 
+## Status do Projeto
+
+- **Backend**: ✓ Deployed em https://tradutor-profissional-api.onrender.com
+- **Frontend**: ✓ Deployed em https://frontend-pi-woad.vercel.app
+
 ## Tecnologias Utilizadas
 
 ### Backend
 - FastAPI (Framework web assíncrono)
-- OpenAI GPT-4o Optimized (Motor de tradução principal)
+- OpenAI GPT-4o (Motor de tradução principal)
 - Python 3.12+
-- PostgreSQL (Sistema de banco de dados implementado)
+- PostgreSQL (Sistema de banco de dados)
 - Alembic (Sistema de migração)
+- Render (Plataforma de deploy)
 
 ### Frontend
 - React 18 com TypeScript
@@ -17,6 +23,7 @@ Uma aplicação de tradução profissional que utiliza modelos de linguagem avan
 - Sistema de upload com drag-and-drop
 - Visualizador de documentos integrado
 - Interface responsiva
+- Vercel (Plataforma de deploy)
 
 ## Estrutura do Projeto
 
@@ -46,6 +53,8 @@ tradutor_profissional/
 - ✓ Seleção de idiomas de origem e destino
 - ✓ Sistema de gerenciamento de capítulos
 - ✓ Processamento otimizado de documentos
+- ✓ Deploy automático no Vercel e Render
+- ✓ Integração frontend-backend via CORS
 
 ## Configuração e Instalação
 
@@ -68,6 +77,7 @@ pip install -r requirements.txt
 Crie um arquivo `.env` na pasta backend com:
 ```env
 OPENAI_API_KEY=sua_chave_api_aqui
+DATABASE_URL=sua_url_postgres_aqui
 ```
 
 4. **Iniciar o servidor**:
@@ -85,71 +95,55 @@ cd frontend
 npm install
 ```
 
-2. **Iniciar o servidor de desenvolvimento**:
+2. **Configurar variáveis de ambiente**:
+Crie um arquivo `.env` na pasta frontend com:
+```env
+REACT_APP_API_URL=http://localhost:8000
+```
+
+3. **Iniciar o servidor de desenvolvimento**:
 ```bash
 npm start
 ```
 
 O frontend estará disponível em `http://localhost:3000`
 
-## API Endpoints
-
-### Tradução
-- `POST /api/translate`
-  - Traduz um texto
-  - Corpo da requisição:
-    ```json
-    {
-      "text": "Text to translate",
-      "source_lang": "en",
-      "target_lang": "pt"
-    }
-    ```
-  - Resposta:
-    ```json
-    {
-      "translated_text": "Texto traduzido"
-    }
-    ```
-
 ## Deploy
 
 ### Backend (Render)
 
-1. Faça login no [Render](https://render.com)
-2. Conecte seu repositório GitHub
-3. Clique em "New +" e selecione "Blueprint"
-4. Selecione o repositório do projeto
-5. O Render irá automaticamente:
-   - Criar o banco de dados PostgreSQL
-   - Configurar as variáveis de ambiente
-   - Fazer deploy da API
+O backend está atualmente deployed em: https://tradutor-profissional-api.onrender.com
+
+Para fazer deploy de alterações:
+1. Faça commit das mudanças
+2. Push para o GitHub
+3. O Render fará o deploy automaticamente
 
 ### Frontend (Vercel)
 
-1. Faça login no [Vercel](https://vercel.com)
-2. Importe o projeto do GitHub
-3. Configure a variável de ambiente:
-   - `REACT_APP_API_URL`: URL do backend no Render
-4. Clique em "Deploy"
+O frontend está atualmente deployed em: https://frontend-pi-woad.vercel.app
 
-### Variáveis de Ambiente Necessárias
+Para fazer deploy de alterações:
+1. Faça commit das mudanças
+2. Push para o GitHub
+3. O Vercel fará o deploy automaticamente
 
-#### Backend (Render)
-- `DATABASE_URL`: Configurado automaticamente
-- `OPENAI_API_KEY`: Sua chave da API OpenAI
-- `PORT`: Configurado automaticamente
+## Limitações Conhecidas
 
-#### Frontend (Vercel)
-- `REACT_APP_API_URL`: URL do backend
+1. Tempo de cold start no Render (plano gratuito)
+2. Limite de requisições da API OpenAI
+3. Sem sistema de autenticação
+4. Suporte apenas para tradução inglês-português
 
-## Funcionalidades Planejadas
+## Próximas Funcionalidades
 
 - [ ] Sistema de histórico de traduções
 - [ ] Personalização de estilo de tradução
 - [ ] Interface de revisão avançada
 - [ ] Suporte a múltiplos formatos de arquivo
 - [ ] Sistema de feedback e aprendizado contínuo
+- [ ] Sistema de autenticação
+- [ ] Suporte a mais pares de idiomas
 
 ## Contribuição
 

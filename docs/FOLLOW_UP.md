@@ -1,6 +1,6 @@
 # Follow-up do Projeto Tradutor Profissional
 
-## Última Atualização: 29/12/2023 16:43
+## Última Atualização: 29/12/2023 18:55
 
 ### 1. Status Atual do Projeto
 
@@ -13,6 +13,8 @@
 - ✓ Endpoints principais funcionando
 - ✓ Suporte a upload e processamento de documentos
 - ✓ Sistema de tradução assíncrona implementado
+- ✓ Deploy no Render configurado
+- ✓ CORS configurado para frontend no Vercel
 
 #### 1.2 Frontend (React + TypeScript + Tailwind)
 - ✓ Interface básica implementada
@@ -23,99 +25,10 @@
 - ✓ Sistema de seleção de idiomas
 - ✓ Navegação por capítulos
 - ✓ Preview do conteúdo do documento
+- ✓ Deploy no Vercel configurado
+- ✓ Integração com backend no Render
 
-**Estrutura do Banco de Dados:**
-```sql
--- Perfis de Tradutores
-translator_profiles
-  ├── id (PK)
-  ├── name
-  ├── preferred_style (JSON)
-  ├── language_pairs (JSON)
-  └── created_at, updated_at
-
--- Documentos
-documents
-  ├── id (PK)
-  ├── filename
-  ├── mime_type
-  ├── file_path
-  ├── processed_path
-  ├── size
-  ├── num_chapters
-  ├── total_paragraphs
-  ├── document_metadata (JSON)
-  ├── created_at
-  ├── translator_profile_id (FK)
-  └── is_confidential
-
--- Capítulos
-chapters
-  ├── id (PK)
-  ├── document_id (FK)
-  ├── title
-  ├── order
-  ├── content (JSON)
-  ├── translated_content (JSON)
-  ├── translation_status
-  ├── progress_percentage
-  └── created_at, updated_at
-
--- Traduções
-translations
-  ├── id (PK)
-  ├── original_text
-  ├── translated_text
-  ├── source_language
-  ├── target_language
-  ├── formality_level
-  ├── tone
-  ├── domain_specific
-  ├── preserve_formatting
-  ├── locale_specific
-  ├── quality_score
-  ├── revision_needed
-  ├── has_been_edited
-  ├── edit_distance
-  ├── translator_feedback
-  ├── improvement_suggestions (JSON)
-  ├── learning_flags (JSON)
-  ├── project_id
-  ├── security_level
-  ├── is_confidential
-  ├── translator_profile_id (FK)
-  ├── document_id (FK)
-  └── chapter_id (FK)
-
--- Revisões de Traduções
-translation_revisions
-  ├── id (PK)
-  ├── translation_id (FK)
-  ├── revised_text
-  ├── revision_type
-  ├── revision_comments
-  ├── time_spent
-  ├── quality_improvement
-  ├── accepted_changes
-  └── created_at
-```
-
-**Estrutura Atual do Backend:**
-```
-backend/
-├── main.py (API endpoints)
-├── models.py (Modelos do banco de dados)
-├── schemas.py (Schemas Pydantic)
-├── database.py (Configuração do PostgreSQL)
-├── document_processor.py (Processamento de documentos)
-├── alembic/ (Sistema de migração)
-│   ├── versions/
-│   │   └── eefa6da3aaf0_create_initial_tables.py
-│   └── env.py
-└── requirements.txt
-```
-
-### 2. Últimas Alterações Implementadas (29/12/2023 16:43)
+### 2. Últimas Alterações Implementadas (29/12/2023 18:55)
 
 #### 2.1 Backend
 - ✓ Atualização do cliente OpenAI para nova versão
@@ -123,12 +36,16 @@ backend/
 - ✓ Otimização do processamento de documentos
 - ✓ Sistema de gerenciamento de capítulos
 - ✓ Endpoint para deleção de documentos
+- ✓ Configuração de CORS para frontend no Vercel
+- ✓ Deploy no Render finalizado
 
 #### 2.2 Frontend
 - ✓ Interface de upload com drag-and-drop
 - ✓ Visualizador de documentos
 - ✓ Sistema de navegação por capítulos
 - ✓ Seleção de idiomas de origem e destino
+- ✓ Configuração de axios para backend no Render
+- ✓ Deploy no Vercel finalizado
 
 ### 3. Próximas Etapas
 
@@ -169,6 +86,8 @@ backend/
 1. Necessidade de testes com documentos grandes
 2. Sem autenticação
 3. Limitado a tradução inglês-português
+4. Tempo de cold start no Render (plano gratuito)
+5. Limite de requisições da API OpenAI
 
 ### 6. Métricas e KPIs
 - Tempo médio de tradução: A ser implementado
@@ -195,9 +114,13 @@ backend/
 
 ## Histórico de Atualizações
 
-### 29/12/2023
+### 29/12/2023 18:55
+- Deploy completo no Vercel e Render
+- Configuração de CORS para permitir comunicação entre frontend e backend
+- Atualização da configuração do axios para usar backend no Render
+- Frontend e backend agora estão no mesmo repositório para facilitar manutenção
+
+### 29/12/2023 16:43
 - Implementado suporte completo a documentos no backend
 - Adicionado processador de documentos com suporte a PDF, DOCX e TXT
 - Criada estrutura de banco de dados para documentos e capítulos
-- Configurado sistema de migração com Alembic
-- Implementados endpoints para upload e tradução de documentos
