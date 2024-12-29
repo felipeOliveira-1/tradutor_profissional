@@ -17,7 +17,14 @@ app = FastAPI()
 # Configurar CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://frontend-pi-woad.vercel.app",
+        "https://frontend-6oxlcs3x3-felipe-silvas-projects-7775c97e.vercel.app",
+        "https://frontend-h9uhffkmc-felipe-silvas-projects-7775c97e.vercel.app",
+        "https://frontend-9rawpk01h-felipe-silvas-projects-7775c97e.vercel.app",
+        "https://frontend-b5ruqftm9-felipe-silvas-projects-7775c97e.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,4 +36,4 @@ app.include_router(translation_router.router, prefix="/api/translations", tags=[
 
 @app.get("/")
 async def root():
-    return {"message": "Bem-vindo à API do Tradutor Profissional"}
+    return {"message": "Tradutor Profissional API"}
