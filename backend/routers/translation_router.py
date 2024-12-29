@@ -4,6 +4,7 @@ from typing import List, Optional
 import logging
 from datetime import datetime
 from pydantic import BaseModel
+import traceback
 
 from database import get_db
 from models import Translation, Document, Chapter
@@ -30,7 +31,40 @@ class TranslationResponse(BaseModel):
     target_language: str
     created_at: datetime
 
-@router.post("/translate", response_model=TranslationResponse)
+# Endpoint para tradução rápida (sem salvar no banco)
+@router.post("/quick")
+async def translate_quick(
+    request: TranslationRequest,
+    db: Session = Depends(get_db)
+):
+    try:
+        logger.info(f"Iniciando tradução rápida de {request.source_language} para {request.target_language}")
+        logger.info(f"Texto a ser traduzido: {request.text[:100]}...")  # Log apenas os primeiros 100 caracteres
+        
+        translated_text = await translate_text(
+            text=request.text,
+            source_language=request.source_language,
+            target_language=request.target_language
+        )
+        
+        logger.info("Tradução concluída com sucesso")
+        
+        return {
+            "translated_text": translated_text,
+            "source_language": request.source_language,
+            "target_language": request.target_language
+        }
+        
+    except Exception as e:
+        logger.error(f"Erro durante a tradução: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao traduzir texto: {str(e)}"
+        )
+
+# Endpoint para tradução com histórico
+@router.post("/", response_model=TranslationResponse)
 async def translate(
     request: TranslationRequest,
     db: Session = Depends(get_db)
@@ -72,7 +106,8 @@ async def translate(
         )
         
     except Exception as e:
-        logger.error(f"Erro durante a tradução: {str(e)}", exc_info=True)
+        logger.error(f"Erro durante a tradução: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(
             status_code=500,
             detail=f"Erro ao processar a tradução: {str(e)}"
@@ -92,7 +127,8 @@ def list_translations(db: Session = Depends(get_db)):
             ) for t in translations
         ]
     except Exception as e:
-        logger.error(f"Erro ao listar traduções: {str(e)}", exc_info=True)
+        logger.error(f"Erro ao listar traduções: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(
             status_code=500,
             detail=f"Erro ao listar traduções: {str(e)}"
@@ -104,8 +140,8 @@ def get_translation(translation_id: int, db: Session = Depends(get_db)):
         logger.info(f"Buscando tradução {translation_id}")
         translation = db.query(Translation).filter(Translation.id == translation_id).first()
         if not translation:
-            logger.warning(f"Tradução {translation_id} não encontrada")
             raise HTTPException(status_code=404, detail="Tradução não encontrada")
+            
         return TranslationResponse(
             translated_text=translation.translated_text,
             source_language=translation.source_language,
@@ -115,7 +151,8 @@ def get_translation(translation_id: int, db: Session = Depends(get_db)):
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Erro ao buscar tradução {translation_id}: {str(e)}", exc_info=True)
+        logger.error(f"Erro ao buscar tradução: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(
             status_code=500,
             detail=f"Erro ao buscar tradução: {str(e)}"
