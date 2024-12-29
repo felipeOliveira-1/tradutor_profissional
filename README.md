@@ -6,30 +6,46 @@ Uma aplicação de tradução profissional que utiliza modelos de linguagem avan
 
 ### Backend
 - FastAPI (Framework web assíncrono)
-- OpenAI GPT-4 (Motor de tradução)
+- OpenAI GPT-4o Optimized (Motor de tradução principal)
 - Python 3.12+
-- PostgreSQL (em breve)
+- PostgreSQL (Sistema de banco de dados implementado)
+- Alembic (Sistema de migração)
 
 ### Frontend
-- React 18
-- TypeScript
+- React 18 com TypeScript
 - Tailwind CSS
-- Axios
+- Sistema de upload com drag-and-drop
+- Visualizador de documentos integrado
+- Interface responsiva
 
 ## Estrutura do Projeto
 
 ```
 tradutor_profissional/
-├── backend/               # API FastAPI
-│   ├── main.py           # Aplicação principal
+├── backend/               
+│   ├── main.py           # API endpoints
+│   ├── models.py         # Modelos do banco de dados
+│   ├── schemas.py        # Schemas Pydantic
+│   ├── database.py       # Configuração PostgreSQL
+│   ├── document_processor.py # Processamento de documentos
+│   ├── alembic/          # Sistema de migração
 │   ├── requirements.txt  # Dependências Python
 │   └── .env             # Variáveis de ambiente
-├── frontend/             # Aplicação React
+├── frontend/            
 │   ├── src/             # Código fonte React
 │   ├── package.json     # Dependências Node.js
-│   └── tailwind.config.js # Configuração Tailwind
+│   └── tailwind.config.js
 └── docs/                # Documentação do projeto
 ```
+
+## Recursos Implementados
+- ✓ Upload e processamento de documentos (PDF, DOCX, TXT)
+- ✓ Tradução assíncrona de textos
+- ✓ Navegação por capítulos
+- ✓ Interface de visualização de documentos
+- ✓ Seleção de idiomas de origem e destino
+- ✓ Sistema de gerenciamento de capítulos
+- ✓ Processamento otimizado de documentos
 
 ## Configuração e Instalação
 
