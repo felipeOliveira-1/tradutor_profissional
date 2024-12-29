@@ -202,3 +202,40 @@ def get_document(document_id: int, db: Session = Depends(get_db)):
             status_code=500,
             detail=f"Erro ao buscar documento: {str(e)}"
         )
+
+@router.delete("/{document_id}")
+def delete_document(document_id: int, db: Session = Depends(get_db)):
+    try:
+        logger.info(f"Iniciando deleção do documento {document_id}")
+        
+        # Buscar o documento
+        document = db.query(Document).filter(Document.id == document_id).first()
+        if not document:
+            logger.warning(f"Documento {document_id} não encontrado")
+            raise HTTPException(status_code=404, detail="Documento não encontrado")
+        
+        # Remover arquivo físico
+        try:
+            if os.path.exists(document.file_path):
+                os.remove(document.file_path)
+                logger.info(f"Arquivo físico removido: {document.file_path}")
+        except Exception as e:
+            logger.error(f"Erro ao remover arquivo físico: {str(e)}")
+            # Continuar mesmo se falhar ao remover arquivo físico
+        
+        # Remover do banco de dados
+        db.delete(document)
+        db.commit()
+        logger.info(f"Documento {document_id} removido com sucesso")
+        
+        return {"message": f"Documento {document.filename} removido com sucesso"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erro ao deletar documento {document_id}: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao deletar documento: {str(e)}"
+        )
