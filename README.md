@@ -1,0 +1,113 @@
+# Tradutor Profissional
+
+Uma aplicação de tradução profissional que utiliza modelos de linguagem avançados para auxiliar tradutores, oferecendo traduções precisas e personalizáveis.
+
+## Tecnologias Utilizadas
+
+### Backend
+- FastAPI (Framework web assíncrono)
+- OpenAI GPT-4 (Motor de tradução)
+- Python 3.12+
+- PostgreSQL (em breve)
+
+### Frontend
+- React 18
+- TypeScript
+- Tailwind CSS
+- Axios
+
+## Estrutura do Projeto
+
+```
+tradutor_profissional/
+├── backend/               # API FastAPI
+│   ├── main.py           # Aplicação principal
+│   ├── requirements.txt  # Dependências Python
+│   └── .env             # Variáveis de ambiente
+├── frontend/             # Aplicação React
+│   ├── src/             # Código fonte React
+│   ├── package.json     # Dependências Node.js
+│   └── tailwind.config.js # Configuração Tailwind
+└── docs/                # Documentação do projeto
+```
+
+## Configuração e Instalação
+
+### Backend
+
+1. **Configurar ambiente virtual**:
+```bash
+cd backend
+python -m venv venv
+.\venv\Scripts\activate  # Windows
+source venv/bin/activate # Linux/Mac
+```
+
+2. **Instalar dependências**:
+```bash
+pip install -r requirements.txt
+```
+
+3. **Configurar variáveis de ambiente**:
+Crie um arquivo `.env` na pasta backend com:
+```env
+OPENAI_API_KEY=sua_chave_api_aqui
+```
+
+4. **Iniciar o servidor**:
+```bash
+python -m uvicorn main:app --reload
+```
+
+O servidor estará disponível em `http://localhost:8000`
+
+### Frontend
+
+1. **Instalar dependências**:
+```bash
+cd frontend
+npm install
+```
+
+2. **Iniciar o servidor de desenvolvimento**:
+```bash
+npm start
+```
+
+O frontend estará disponível em `http://localhost:3000`
+
+## API Endpoints
+
+### Tradução
+- `POST /api/translate`
+  - Traduz um texto
+  - Corpo da requisição:
+    ```json
+    {
+      "text": "Text to translate",
+      "source_lang": "en",
+      "target_lang": "pt"
+    }
+    ```
+  - Resposta:
+    ```json
+    {
+      "translated_text": "Texto traduzido"
+    }
+    ```
+
+## Funcionalidades Planejadas
+
+- [ ] Sistema de histórico de traduções
+- [ ] Personalização de estilo de tradução
+- [ ] Interface de revisão avançada
+- [ ] Suporte a múltiplos formatos de arquivo
+- [ ] Sistema de feedback e aprendizado contínuo
+
+## Contribuição
+
+Contribuições são bem-vindas! Por favor, leia nosso guia de contribuição antes de submeter um Pull Request.
+
+## Licença
+
+Este projeto está licenciado sob a MIT License - veja o arquivo LICENSE para detalhes.
