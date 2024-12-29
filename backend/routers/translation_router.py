@@ -23,6 +23,7 @@ class TranslationRequest(BaseModel):
     target_language: str
     formality_level: Optional[str] = "neutral"
     tone: Optional[str] = None
+    style: Optional[str] = "general"
 
 # Schema para resposta de tradução
 class TranslationResponse(BaseModel):
@@ -39,12 +40,15 @@ async def translate_quick(
 ):
     try:
         logger.info(f"Iniciando tradução rápida de {request.source_language} para {request.target_language}")
+        logger.info(f"Formalidade: {request.formality_level}, Estilo: {request.style}")
         logger.info(f"Texto a ser traduzido: {request.text[:100]}...")  # Log apenas os primeiros 100 caracteres
         
         translated_text = await translate_text(
             text=request.text,
             source_language=request.source_language,
-            target_language=request.target_language
+            target_language=request.target_language,
+            formality=request.formality_level,
+            style=request.style
         )
         
         logger.info("Tradução concluída com sucesso")
@@ -52,7 +56,9 @@ async def translate_quick(
         return {
             "translated_text": translated_text,
             "source_language": request.source_language,
-            "target_language": request.target_language
+            "target_language": request.target_language,
+            "formality": request.formality_level,
+            "style": request.style
         }
         
     except Exception as e:
@@ -77,8 +83,8 @@ async def translate(
             text=request.text,
             source_language=request.source_language,
             target_language=request.target_language,
-            formality_level=request.formality_level,
-            tone=request.tone
+            formality=request.formality_level,
+            style=request.style
         )
         
         # Criar registro da tradução
@@ -89,6 +95,7 @@ async def translate(
             target_language=request.target_language,
             formality_level=request.formality_level,
             tone=request.tone,
+            style=request.style,
             created_at=datetime.utcnow()
         )
         

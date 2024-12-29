@@ -14,15 +14,37 @@ logger = logging.getLogger(__name__)
 # Configurar OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-async def translate_text(text: str, source_language: str, target_language: str) -> str:
+async def translate_text(text: str, source_language: str, target_language: str, formality: str = 'neutral', style: str = 'general') -> str:
     """
     Traduz um texto de um idioma para outro usando a API da OpenAI.
+    
+    Args:
+        text (str): Texto a ser traduzido
+        source_language (str): Idioma de origem
+        target_language (str): Idioma de destino
+        formality (str): Nível de formalidade (formal, neutral, informal)
+        style (str): Estilo da tradução (general, technical, literary, academic)
     """
     try:
-        logger.info(f"Iniciando tradução de {source_language} para {target_language}")
+        logger.info(f"Iniciando tradução de {source_language} para {target_language} (Formalidade: {formality}, Estilo: {style})")
         
-        # Criar o prompt para a tradução
-        system_prompt = f"You are a professional translator. Translate the following text from {source_language} to {target_language}. Maintain the original meaning, tone, and style as much as possible."
+        # Criar o prompt para a tradução com instruções específicas de formalidade e estilo
+        system_prompt = f"""You are a professional translator. Translate the following text from {source_language} to {target_language}.
+Follow these specific guidelines:
+- Formality: Use a {formality} tone (e.g. {
+    'formal language, avoiding colloquialisms' if formality == 'formal'
+    else 'balanced and natural language' if formality == 'neutral'
+    else 'casual and conversational language'
+})
+- Style: Follow a {style} style (e.g. {
+    'clear and straightforward language' if style == 'general'
+    else 'precise technical terminology and clear structure' if style == 'technical'
+    else 'elegant and expressive language' if style == 'literary'
+    else 'scholarly and methodical approach' if style == 'academic'
+    else 'clear and straightforward language'
+})
+Maintain the original meaning while adapting the translation according to these requirements."""
+
         user_prompt = f"Text to translate:\n{text}"
         
         # Criar uma função parcial para a chamada da API
