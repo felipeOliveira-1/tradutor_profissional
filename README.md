@@ -112,6 +112,37 @@ O frontend estará disponível em `http://localhost:3000`
     }
     ```
 
+## Deploy
+
+### Backend (Render)
+
+1. Faça login no [Render](https://render.com)
+2. Conecte seu repositório GitHub
+3. Clique em "New +" e selecione "Blueprint"
+4. Selecione o repositório do projeto
+5. O Render irá automaticamente:
+   - Criar o banco de dados PostgreSQL
+   - Configurar as variáveis de ambiente
+   - Fazer deploy da API
+
+### Frontend (Vercel)
+
+1. Faça login no [Vercel](https://vercel.com)
+2. Importe o projeto do GitHub
+3. Configure a variável de ambiente:
+   - `REACT_APP_API_URL`: URL do backend no Render
+4. Clique em "Deploy"
+
+### Variáveis de Ambiente Necessárias
+
+#### Backend (Render)
+- `DATABASE_URL`: Configurado automaticamente
+- `OPENAI_API_KEY`: Sua chave da API OpenAI
+- `PORT`: Configurado automaticamente
+
+#### Frontend (Vercel)
+- `REACT_APP_API_URL`: URL do backend
+
 ## Funcionalidades Planejadas
 
 - [ ] Sistema de histórico de traduções
